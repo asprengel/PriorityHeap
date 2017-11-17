@@ -113,8 +113,6 @@ inline void PrioQueue::update(int id, int d)
 		cout << "Keine Aenderungen vorgenommen: d=0" << endl;
 		return;
 	}
-	int idAlt = 0;
-	idAlt = field[id]->priority();
 	field[id]->set_priority(field[id]->priority() + d);
 	for (size_t i = 1; i < lenght; i++)
 		{
