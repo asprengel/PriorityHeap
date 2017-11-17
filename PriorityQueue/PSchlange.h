@@ -7,6 +7,7 @@ public:
 	PrioQueue(int length = 1000);
 	PrioElement& maximum() const;
 	PrioElement extractMax();
+	void update(int,int);
 	void insert(const int num);
 
 private:
@@ -89,12 +90,6 @@ void PrioQueue::downHeap()
 		else
 			break;
 	}
-
-	//for (size_t i = 1; i < n + 1; i++)
-	//{
-	//	cout << *field[i] << "\t";
-	//}
-	//cout << endl;
 }
 
 void PrioQueue::swapDatShit(unsigned a, unsigned b)
@@ -103,4 +98,28 @@ void PrioQueue::swapDatShit(unsigned a, unsigned b)
 	buf = field[a];
 	field[a] = field[b];
 	field[b] = buf;
+}
+
+inline void PrioQueue::update(int id, int d)
+{
+	n = lenght - 1;
+	if (id > lenght-1) 
+	{
+		cout << "id groesser als Feldlaenge" << endl;
+		return;
+	}
+	if (d==0)
+	{
+		cout << "Keine Aenderungen vorgenommen: d=0" << endl;
+		return;
+	}
+	int idAlt = 0;
+	idAlt = field[id]->priority();
+	field[id]->set_priority(field[id]->priority() + d);
+	for (size_t i = 1; i < lenght; i++)
+		{
+			upHeap();
+			n--;
+		}
+	n = lenght - 1;
 }
