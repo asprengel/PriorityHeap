@@ -81,4 +81,11 @@ int main()
 		ausgabe2 << bufInt2[i] << endl;
 	}
 	ausgabe.close();
+
+	schlange.loeschen(3);
+
+	for (size_t i = 0; i < length; i++)
+	{
+		cout << schlange.extractMax() << endl;
+	}
 }

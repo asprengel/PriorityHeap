@@ -9,7 +9,7 @@ public:
 	PrioElement extractMax();
 	void update(int,int);
 	void insert(const int num);
-
+	void loeschen(int);
 private:
 	void upHeap();
 	void downHeap();
@@ -120,4 +120,17 @@ inline void PrioQueue::update(int id, int d)
 			n--;
 		}
 	n = lenght - 1;
+}
+
+inline void PrioQueue::loeschen(int id)
+{
+	delete field[id];
+	lenght--;
+	n = lenght;
+	for (size_t i = 1; i < lenght; i++)
+	{
+		upHeap();
+		n--;
+	}
+	n = lenght;
 }
