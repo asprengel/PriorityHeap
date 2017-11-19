@@ -6,7 +6,7 @@
 int main()
 {
 	int zahl;
-	unsigned int length;
+	unsigned int lenght;
 
 	srand(time(0));
 
@@ -17,13 +17,13 @@ int main()
 	//cin >> filename;
 
 	ifstream f(filename);
-	f >> length;
-	PrioQueue schlange(length);
-	int *bufInt = new int[length];
-	int *bufInt2 = new int[length];
+	f >> lenght;
+	PrioQueue schlange(lenght);
+	int *bufInt = new int[lenght];
+	int *bufInt2 = new int[lenght];
 
 	unsigned int index = 0;
-	while (!f.eof() && index < length)
+	while (!f.eof() && index < lenght)
 	{
 		f >> zahl;
 		bufInt[index++] = zahl;
@@ -80,11 +80,11 @@ int main()
 	{
 		ausgabe2 << bufInt2[i] << endl;
 	}
-	ausgabe.close();
+	ausgabe2.close();
 
-	schlange.loeschen(3);
+	schlange.remove(3);
 
-	for (size_t i = 0; i < length; i++)
+	for (size_t i = 0; i < lenght; i++)
 	{
 		cout << schlange.extractMax() << endl;
 	}
