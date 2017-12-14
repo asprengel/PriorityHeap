@@ -1,5 +1,3 @@
-#pragma once
-
 
 class PrioQueue
 {
@@ -11,21 +9,28 @@ public:
 	void update(int,int);
 	void insert(const int num);
 	void remove(int);
-private:
-	void upHeap();
-	void downHeap();
-	void swapDatShit(unsigned a, unsigned b);
-	unsigned int getPos(unsigned int id);
+	const unsigned int getSize() { return n; }
 
-	int n;
+private:
+	void upHeap(unsigned int);
+	void downHeap(unsigned int pos);
+	void swapDatShit(unsigned a, unsigned b);
+	unsigned int getPosReferenz(unsigned int id);
+
+	unsigned int n;
 	unsigned int lenght;
+	unsigned int fortlaufendeId;
 	PrioElement **field;
+	unsigned int *nReferenz;
 };
 
 inline PrioQueue::PrioQueue(int lenght)
 {
+	nReferenz = new unsigned int[lenght];
+
 	this->lenght = lenght + 1;
 	n = 0; 
+	fortlaufendeId = 0;
 	field = new PrioElement*[this->lenght];
 	field[0] = NULL;
 	for (size_t i = 1; i < this->lenght; i++)
@@ -50,39 +55,34 @@ PrioElement & PrioQueue::maximum() const
 
 PrioElement PrioQueue::extractMax()
 {
+	if (n == 0) return *field[0];
 	PrioElement max = *field[1];
 	swapDatShit(1, n);
 	n--;
-	downHeap();
+	downHeap(1);
 	return max;
 }
 
 void PrioQueue::insert(const int num)
 {
 	field[++n]->set_priority(num);
-	upHeap();
+	field[n]->setId(fortlaufendeId);
+	nReferenz[fortlaufendeId++] = n;
+	upHeap(n);
 }
 
-void PrioQueue::upHeap()
+void PrioQueue::upHeap(unsigned int pos)
 {
-	usigned int pos = n;
 
 	while (pos > 1 && *field[pos / 2] < *field[pos]) 
 	{ 
 		swapDatShit(pos, pos/2); 
 		pos = pos / 2; 
 	}
-
-	//for (size_t i = 1; i < n + 1; i++)
-	//{
-	//	cout << *field[i] << "\t";
-	//}
-	//cout << endl;
 }
 
-void PrioQueue::downHeap()
+void PrioQueue::downHeap(unsigned int pos)
 {
-	unsigned int pos = 1;
 
 	while (true)
 	{
@@ -108,54 +108,40 @@ inline void PrioQueue::swapDatShit(unsigned a, unsigned b)
 	buf = field[a];
 	field[a] = field[b];
 	field[b] = buf;
+
+	nReferenz[a] = field[a]->getId();
+	nReferenz[b] = field[b]->getId();
 }
 
 inline void PrioQueue::update(int id, int d)
 {
-	n = lenght - 1;
-
-	unsigned int pos = getPos(id);
+	unsigned int pos = getPosReferenz(id);
 	if (pos == 0) return;
 
-	if (id > lenght-1) 
-	{
-		cout << "id groesser als Feldlaenge" << endl;
-		return;
-	}
-	if (d==0)
-	{
-		cout << "Keine Aenderungen vorgenommen: d=0" << endl;
-		return;
-	}
 
 	field[pos]->set_priority(field[pos]->priority() + d);
 
-	for (size_t i = 1; i < lenght; i++)
-	{
-		upHeap();
-		n--;
-	}
-
-	n = lenght - 1;
+	if (d > 0)
+		upHeap(pos);
+	else
+		downHeap(pos);
 }
 
 inline void PrioQueue::remove(int id)
 {
-	usigned int pos = getPos(id);
+	usigned int pos = getPosReferenz(id);
 	if (pos == 0) return;
+
+	nReferenz[id] = 0;
 
 	swapDatShit(pos, n);
 	n--;
-	downHeap();
+	downHeap(pos);
 }
 
 
-inline unsigned int PrioQueue::getPos(unsigned int id)
+
+inline unsigned int PrioQueue::getPosReferenz(unsigned int id)
 {
-	for (size_t i = 1; i < n; i++)
-	{
-		if (field[i]->getId() == id)
-			return i;
-	}
-	return 0;
+	return nReferenz[id];
 }
